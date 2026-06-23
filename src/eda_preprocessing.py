@@ -42,7 +42,7 @@ class CrediTrustDataPipeline:
             proportion = len(group) / len(cleaned_df)
             group_sample_size = int(np.round(proportion * target_sample_size))
             group_sample_size = max(10, min(group_sample_size, len(group)))
-            sampled_chunks.append(group.sample(n=group_sample_size, random_state=42))
+            sampled_chunks.append(group.sample(n=min(group_sample_size, len(group)), replace=True, random_state=42) if len(group) > 0 else pd.DataFrame())
         return pd.concat(sampled_chunks).reset_index(drop=True)
 
     def build_local_vector_chunks(self, stratified_df):
